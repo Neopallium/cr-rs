@@ -1,12 +1,16 @@
 pub mod common;
+
+#[cfg(not(guest))]
 pub mod host;
 
 use common::cr_plugin;
 
+#[derive(Debug, Copy, Clone)]
 pub struct Plugin {
     ctx: cr_plugin,
 }
 
+#[cfg(not(guest))]
 impl Plugin {
     pub fn new(fullpath: &str) -> Plugin {
         let mut plugin = Plugin {

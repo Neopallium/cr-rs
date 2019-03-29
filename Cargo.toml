@@ -6,6 +6,11 @@ edition = "2018"
 links = "cr"
 build = "build.rs"
 
+[features]
+# Optional feature to build cr-sys wihtout host side code.
+# Use this feature when building a guest plugin.
+guest = []
+
 [dependencies]
 
 [[example]]
