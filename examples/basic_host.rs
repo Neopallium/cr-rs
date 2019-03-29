@@ -23,7 +23,7 @@ fn main() {
         thread::sleep(Duration::from_millis(200));
     }
     println!("Call cr_plugin_close(ctx)");
-    plugin.close();
+    drop(plugin);
     println!("exit");
 }
 

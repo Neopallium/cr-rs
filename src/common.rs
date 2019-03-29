@@ -1,12 +1,12 @@
 use std::os::raw::{c_int, c_uint, c_void};
 
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug)]
 pub struct cr_plugin {
     p: *mut c_void,
-    userdata: *mut c_void,
-    version: c_uint,
-    failure: c_int,
+    pub userdata: *mut c_void,
+    pub version: c_uint,
+    pub failure: c_int,
 }
 
 impl cr_plugin {

@@ -1,11 +1,9 @@
+#[macro_use]
 extern crate cr_sys;
 
-use std::os::raw::{c_int};
+cr_main!(plugin_main);
 
-use cr_sys::common::*;
-
-#[no_mangle]
-pub fn cr_main(_ctx: &mut cr_plugin, _cr_op: c_int) -> c_int {
+pub fn plugin_main(_ctx: &mut cr_sys::Plugin, _cr_op: i32) -> i32 {
     // Test "guest" feature.
     #[cfg(not(guest))]
     {
