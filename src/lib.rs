@@ -1,9 +1,6 @@
-pub mod common;
+extern crate cr_sys;
 
-#[cfg(not(guest))]
-pub mod host;
-
-use common::cr_plugin;
+use cr_sys::*;
 
 #[derive(Debug)]
 pub struct Plugin {
@@ -11,7 +8,7 @@ pub struct Plugin {
 }
 
 impl Plugin {
-    #[cfg(not(guest))]
+    #[cfg(not(feature = "guest"))]
     pub fn new(fullpath: &str) -> Plugin {
         let mut plugin = Plugin {
             ctx: cr_plugin::new(),
@@ -29,13 +26,13 @@ impl Plugin {
         unsafe { &mut *(ctx.userdata as *mut Plugin) }
     }
 
-    #[cfg(not(guest))]
+    #[cfg(not(feature = "guest"))]
     pub fn update(&mut self, reload_check: bool) -> i32 {
         unsafe { host::cr_plugin_update(&mut self.ctx, reload_check)}
     }
 }
 
-#[cfg(not(guest))]
+#[cfg(not(feature = "guest"))]
 impl Drop for Plugin {
     fn drop(&mut self) {
         unsafe { host::cr_plugin_close(&mut self.ctx)}
@@ -45,9 +42,10 @@ impl Drop for Plugin {
 #[macro_export]
 macro_rules! cr_main {
     ($rust_cr_main:ident) => (
+        use std::os::raw::c_int;
         #[no_mangle]
-        pub fn cr_main(ctx: &mut cr_sys::common::cr_plugin, cr_op: c_int) -> c_int {
-            let plugin = cr_sys::Plugin::from_ctx(ctx);
+        pub fn cr_main(ctx: &mut cr_sys::cr_plugin, cr_op: c_int) -> c_int {
+            let plugin = cr::Plugin::from_ctx(ctx);
             $rust_cr_main(plugin, cr_op)
         }
     )

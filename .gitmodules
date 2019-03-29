@@ -1,3 +1,0 @@
-[submodule "src/cr"]
-	path = vendor
-	url = https://github.com/fungos/cr.git

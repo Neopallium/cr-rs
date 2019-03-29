@@ -1,15 +1,17 @@
 #[macro_use]
-extern crate cr_sys;
+extern crate cr;
+
+use cr::Plugin;
 
 cr_main!(plugin_main);
 
-pub fn plugin_main(_ctx: &mut cr_sys::Plugin, _cr_op: i32) -> i32 {
+pub fn plugin_main(_ctx: &mut Plugin, _cr_op: i32) -> i32 {
     // Test "guest" feature.
-    #[cfg(not(guest))]
+    #[cfg(not(feature = "guest"))]
     {
         println!("Guest compiled with host-side code.");
         // This code will only run if the "guest" feature is not used.
-        let plugin = cr_sys::Plugin::new("test");
+        let plugin = Plugin::new("test");
         println!("- plugin = {:?}", plugin);
     }
 

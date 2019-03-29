@@ -1,17 +1,16 @@
 [package]
-name = "cr-sys"
+name = "cr"
 version = "0.1.0"
 authors = ["Robert G. Jakabosky <rjakabosky+neopallium@neoawareness.com>"]
 edition = "2018"
-links = "cr"
-build = "build.rs"
 
 [features]
 # Optional feature to build cr-sys wihtout host side code.
 # Use this feature when building a guest plugin.
-guest = []
+guest = ["cr-sys/guest"]
 
 [dependencies]
+cr-sys = { version = "0.1", path = "../cr-sys/"}
 
 [[example]]
 name = "basic_host"
