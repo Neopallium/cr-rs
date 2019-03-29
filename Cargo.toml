@@ -15,7 +15,7 @@ edition = "2018"
 guest = ["cr-sys/guest"]
 
 [dependencies]
-cr-sys = { version = "0.1", path = "../cr-sys/"}
+cr-sys = "0.1"
 
 [[example]]
 name = "basic_host"
