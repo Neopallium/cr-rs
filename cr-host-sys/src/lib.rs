@@ -1,34 +1,26 @@
-use std::os::raw::{c_int, c_uint, c_uchar, c_void};
+pub mod host;
 
-#[repr(C)]
-#[derive(Copy, Clone)]
-pub struct cr_plugin {
-    p: *mut c_void,
-    userdata: *mut c_void,
-    version: c_uint,
-    failure: c_int,
+pub struct Plugin {
+    ctx: host::cr_plugin,
 }
 
-impl cr_plugin {
-    pub fn new() -> cr_plugin {
-        cr_plugin {
-            p: std::ptr::null_mut(),
-            userdata: std::ptr::null_mut(),
-            version: 0,
-            failure: 0,
-        }
+impl Plugin {
+    pub fn new(fullpath: &str) -> Plugin {
+        let mut plugin = Plugin {
+            ctx: host::cr_plugin::new(),
+        };
+
+        let s_fullpath = std::ffi::CString::new(fullpath).unwrap();
+        unsafe { host::cr_plugin_load(&mut plugin.ctx, s_fullpath.as_ptr())};
+
+        plugin
+    }
+
+    pub fn update(&mut self, reload_check: bool) -> i32 {
+        unsafe { host::cr_plugin_update(&mut self.ctx, reload_check)}
+    }
+
+    pub fn close(&mut self) {
+        unsafe { host::cr_plugin_close(&mut self.ctx)}
     }
 }
-
-extern "C" {
-    pub fn cr_plugin_load(ctx: &mut cr_plugin, fullpath: *const c_uchar) -> bool;
-    pub fn cr_plugin_update(ctx: &mut cr_plugin, reload_check: bool) -> c_int;
-    pub fn cr_plugin_close(ctx: &mut cr_plugin);
-
-    pub fn wrap_cr_set_temporary_path(ctx: &mut cr_plugin, path: *const c_uchar) -> bool;
-}
-
-pub unsafe fn cr_set_temporary_path(ctx: &mut cr_plugin, path: *const c_uchar) {
-    wrap_cr_set_temporary_path(ctx, path);
-}
-

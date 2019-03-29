@@ -8,5 +8,13 @@ build = "build.rs"
 
 [dependencies]
 
+[[example]]
+name = "basic_host"
+crate-type = ["bin"]
+
+[[example]]
+name = "basic_guest"
+crate-type = ["cdylib"]
+
 [build-dependencies]
 cc = "1.0"
