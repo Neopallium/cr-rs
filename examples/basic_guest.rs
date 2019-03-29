@@ -4,23 +4,25 @@ extern crate cr;
 use std::time::Duration;
 use std::thread;
 
-use cr::Plugin;
+mod basic_state;
+
+use basic_state::*;
 
 use cr::cr_op::*;
 
 cr_main!(plugin_main);
 
-pub fn plugin_main(ctx: &mut Plugin, cr_op: cr::cr_op) -> i32 {
+pub fn plugin_main(ctx: &mut BasicPlugin, cr_op: cr::cr_op) -> i32 {
     // Test "guest" feature.
     #[cfg(not(feature = "guest"))]
     {
         println!("Guest compiled with host-side code.");
         // This code will only run if the "guest" feature is not used.
-        let plugin = Plugin::new("test");
+        let plugin = BasicPlugin::new(BasicState{counter: 0},"test");
         println!("- plugin = {:?}", plugin);
     }
 
-    println!("test recompile. test5");
+    println!("test recompile. test1");
     // Test crash.
     // Rollback to the previous version seems to work once.
     // Then on the next reload it gets stuck in a setjmp/longjmp loop?
@@ -39,7 +41,10 @@ pub fn plugin_main(ctx: &mut Plugin, cr_op: cr::cr_op) -> i32 {
             println!("Plugin load. version = {}", ctx.get_version());
         },
         CR_STEP => {
-            println!("Plugin step. Hello from rust plugin. version = {}", ctx.get_version());
+            let version = ctx.get_version();
+            let state = ctx.state_mut();
+            state.counter += 1;
+            println!("Plugin step. count = {}. version = {}", state.counter, version);
 
             // slow down the printing.
             thread::sleep(Duration::from_millis(200));

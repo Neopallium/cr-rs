@@ -6,15 +6,17 @@ pub use cr_sys::cr_op;
 pub use cr_sys::cr_failure;
 
 #[derive(Debug)]
-pub struct Plugin {
+pub struct Plugin<State> {
     ctx: cr_plugin,
+    state: State,
 }
 
-impl Plugin {
+impl<State> Plugin<State> {
     #[cfg(not(feature = "guest"))]
-    pub fn new(fullpath: &str) -> Box<Plugin> {
+    pub fn new(state: State, fullpath: &str) -> Box<Plugin<State>> {
         let mut plugin = Box::new(Plugin {
             ctx: cr_plugin::new(),
+            state: state,
         });
         // Store pointer to `Plugin` struct in `userdata` to be passed to the guest's `cr_main`
         plugin.ctx.userdata = &mut (*plugin) as *mut _ as *mut ::std::os::raw::c_void;
@@ -25,8 +27,8 @@ impl Plugin {
         plugin
     }
 
-    pub fn from_ctx(ctx: &mut cr_plugin) -> &mut Plugin {
-        unsafe { &mut *(ctx.userdata as *mut Plugin) }
+    pub fn from_ctx(ctx: &mut cr_plugin) -> &mut Plugin<State> {
+        unsafe { &mut *(ctx.userdata as *mut Plugin<State>) }
     }
 
     #[cfg(not(feature = "guest"))]
@@ -47,10 +49,18 @@ impl Plugin {
     pub fn get_failure(&self) -> cr_failure {
         self.ctx.failure
     }
+
+    pub fn state(&self) -> &State {
+        &self.state
+    }
+
+    pub fn state_mut(&mut self) -> &mut State {
+        &mut self.state
+    }
 }
 
 #[cfg(not(feature = "guest"))]
-impl Drop for Plugin {
+impl<State> Drop for Plugin<State> {
     fn drop(&mut self) {
         unsafe { cr_plugin_close(&mut self.ctx)}
     }

@@ -5,7 +5,9 @@ use std::env;
 use std::time::Duration;
 use std::thread;
 
-use cr::Plugin;
+mod basic_state;
+
+use basic_state::*;
 
 fn main() {
     let mut plugin_name = env::current_exe().expect("Failed to get current path");
@@ -13,7 +15,9 @@ fn main() {
     plugin_name.set_file_name("libbasic_guest.so");
     // build the libbasic_guest.so file from the samples of cr.h
     println!("Call cr_plugin_load(ctx, {:?})", plugin_name);
-    let mut plugin = Plugin::new(plugin_name.to_str().unwrap());
+    let mut plugin = BasicPlugin::new(BasicState{
+        counter: 0,
+    }, plugin_name.to_str().unwrap());
 
     let mut err_cnt = 0;
     loop {
