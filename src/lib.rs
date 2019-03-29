@@ -13,16 +13,11 @@ pub struct Plugin {
 impl Plugin {
     #[cfg(not(feature = "guest"))]
     pub fn new(fullpath: &str) -> Box<Plugin> {
-        let plugin = Box::new(Plugin {
+        let mut plugin = Box::new(Plugin {
             ctx: cr_plugin::new(),
         });
-        // Get pointer to heap allocated `Plugin`.
-        // TODO: There must be a better way!
-        let ptr = Box::into_raw(plugin); // Unbox to get raw pointer
-        let mut plugin = unsafe { Box::from_raw(ptr) }; // Rebox.
-
-        // Store our Plugin struct as the `userdata`
-        plugin.ctx.userdata = ptr as *mut _ as *mut ::std::os::raw::c_void;
+        // Store pointer to `Plugin` struct in `userdata` to be passed to the guest's `cr_main`
+        plugin.ctx.userdata = &mut (*plugin) as *mut _ as *mut ::std::os::raw::c_void;
 
         let s_fullpath = std::ffi::CString::new(fullpath).unwrap();
         unsafe { cr_plugin_load(&mut plugin.ctx, s_fullpath.as_ptr())};
