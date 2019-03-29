@@ -5,7 +5,7 @@ use cr::Plugin;
 
 cr_main!(plugin_main);
 
-pub fn plugin_main(_ctx: &mut Plugin, _cr_op: i32) -> i32 {
+pub fn plugin_main(_ctx: &mut Plugin, _cr_op: cr::cr_op) -> i32 {
     // Test "guest" feature.
     #[cfg(not(feature = "guest"))]
     {
