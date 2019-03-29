@@ -44,6 +44,14 @@ impl Plugin {
     pub fn update(&mut self, reload_check: bool) -> i32 {
         unsafe { cr_plugin_update(&mut self.ctx, reload_check)}
     }
+
+    pub fn get_version(&self) -> u32 {
+        self.ctx.version
+    }
+
+    pub fn get_failure(&self) -> cr_failure {
+        self.ctx.failure
+    }
 }
 
 #[cfg(not(feature = "guest"))]

@@ -15,11 +15,18 @@ fn main() {
     println!("Call cr_plugin_load(ctx, {:?})", plugin_name);
     let mut plugin = Plugin::new(plugin_name.to_str().unwrap());
 
+    let mut err_cnt = 0;
     loop {
         println!("Run Update:");
         let rc = plugin.update(true);
         println!("cr_plugin_update(ctx, true) = {}", rc);
-        if rc != 0 { break }
+        if rc != 0 {
+            println!("Plugin error: {:?}", plugin.get_failure());
+            err_cnt += 1;
+            if err_cnt > 10 {
+                break;
+            }
+        }
         thread::sleep(Duration::from_millis(200));
     }
     println!("Call cr_plugin_close(ctx)");
