@@ -1,13 +1,16 @@
+pub mod common;
 pub mod host;
 
+use common::cr_plugin;
+
 pub struct Plugin {
-    ctx: host::cr_plugin,
+    ctx: cr_plugin,
 }
 
 impl Plugin {
     pub fn new(fullpath: &str) -> Plugin {
         let mut plugin = Plugin {
-            ctx: host::cr_plugin::new(),
+            ctx: cr_plugin::new(),
         };
 
         let s_fullpath = std::ffi::CString::new(fullpath).unwrap();

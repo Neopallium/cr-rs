@@ -1,6 +1,5 @@
-// Host-side clib
 #define CR_HOST
-#include "../../vendor/cr.h"
+#include "../vendor/cr.h"
 
 extern "C" void wrap_cr_set_temporary(cr_plugin &ctx, const char *path) {
 	std::string str_path = path;

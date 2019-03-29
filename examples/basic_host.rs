@@ -1,11 +1,11 @@
-extern crate cr_host_sys;
+extern crate cr_sys;
 
 use std::env;
 
 use std::time::Duration;
 use std::thread;
 
-use cr_host_sys::*;
+use cr_sys::*;
 
 fn main() {
     let mut plugin_name = env::current_exe().expect("Failed to get current path");
