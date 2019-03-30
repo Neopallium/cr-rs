@@ -23,6 +23,7 @@ pub fn plugin_main(ctx: &mut BasicPlugin, cr_op: cr::cr_op) -> i32 {
     }
 
     println!("test recompile. test1");
+    //panic!("test");
     // Test crash.
     // Rollback to the previous version seems to work once.
     // Then on the next reload it gets stuck in a setjmp/longjmp loop?
