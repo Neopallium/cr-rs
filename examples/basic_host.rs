@@ -2,8 +2,8 @@ extern crate cr;
 
 use std::env;
 
-use std::time::Duration;
 use std::thread;
+use std::time::Duration;
 
 mod basic_state;
 
@@ -15,9 +15,7 @@ fn main() {
     plugin_name.set_file_name("libbasic_guest.so");
     // build the libbasic_guest.so file from the samples of cr.h
     println!("Call cr_plugin_load(ctx, {:?})", plugin_name);
-    let mut plugin = BasicPlugin::new(BasicState{
-        counter: 0,
-    }, plugin_name.to_str().unwrap());
+    let mut plugin = BasicPlugin::new(BasicState { counter: 0 }, plugin_name.to_str().unwrap());
 
     let mut err_cnt = 0;
     loop {
@@ -37,4 +35,3 @@ fn main() {
     drop(plugin);
     println!("exit");
 }
-
