@@ -1,6 +1,6 @@
 [package]
 name = "cr"
-version = "0.1.0"
+version = "0.1.1"
 license = "MIT/Apache-2.0"
 authors = ["Robert G. Jakabosky <rjakabosky+neopallium@neoawareness.com>"]
 description = "Rust safe bindings for cr.h: A Simple C Hot Reload Header-only Library"
@@ -15,7 +15,7 @@ edition = "2018"
 guest = ["cr-sys/guest"]
 
 [dependencies]
-cr-sys = "0.1"
+cr-sys = "0.1.1"
 
 [[example]]
 name = "basic_host"
